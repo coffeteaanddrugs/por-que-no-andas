@@ -1,0 +1,43 @@
+name: Compilar mod y plugin
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  mod-fabric:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: 8.12
+      - name: Compilar el mod
+        run: gradle build --no-daemon
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mod-fabric-para-jugadores
+          path: build/libs/smartphone-1.0.0.jar
+
+  plugin-paper:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: 8.12
+      - name: Compilar el plugin
+        working-directory: paper-plugin
+        run: gradle build --no-daemon
+      - uses: actions/upload-artifact@v4
+        with:
+          name: plugin-paper-para-el-servidor
+          path: paper-plugin/build/libs/SmartphonePlugin-1.0.0.jar
